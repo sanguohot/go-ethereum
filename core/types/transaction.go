@@ -55,9 +55,9 @@ type txdata struct {
 	Payload      []byte          `json:"input"    gencodec:"required"`
 
 	// Signature values
-	V *big.Int `json:"v" gencodec:"required"`
-	R *big.Int `json:"r" gencodec:"required"`
-	S *big.Int `json:"s" gencodec:"required"`
+	V *big.Int `json:"v"`
+	R *big.Int `json:"r"`
+	S *big.Int `json:"s"`
 
 	// This is only used when marshaling to JSON.
 	// modify begin - by sanguohot for fisco-bcos usage
