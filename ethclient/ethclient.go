@@ -182,11 +182,6 @@ type txExtraInfo struct {
 }
 
 func (tx *rpcTransaction) UnmarshalJSON(msg []byte) error {
-	// modify begin - by sanguohot for fisco-bcos usage
-	if tx.tx == nil {
-		return nil
-	}
-	// modify end   - by sanguohot for fisco-bcos usage
 	if err := json.Unmarshal(msg, &tx.tx); err != nil {
 		return err
 	}
