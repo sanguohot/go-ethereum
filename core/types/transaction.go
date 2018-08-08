@@ -186,6 +186,9 @@ func (tx *Transaction) UnmarshalJSON(input []byte) error {
 
 func (tx *Transaction) Data() []byte       { return common.CopyBytes(tx.data.Payload) }
 func (tx *Transaction) Gas() uint64        { return tx.data.GasLimit }
+// modify begin - by sanguohot for fisco-bcos usage
+func (tx *Transaction) BlockLimit() uint64        { return tx.data.BlockLimit }
+// modify end   - by sanguohot for fisco-bcos usage
 func (tx *Transaction) GasPrice() *big.Int { return new(big.Int).Set(tx.data.Price) }
 func (tx *Transaction) Value() *big.Int    { return new(big.Int).Set(tx.data.Amount) }
 func (tx *Transaction) Nonce() uint64      { return tx.data.AccountNonce }
@@ -233,6 +236,9 @@ func (tx *Transaction) AsMessage(s Signer) (Message, error) {
 	msg := Message{
 		nonce:      tx.data.AccountNonce,
 		gasLimit:   tx.data.GasLimit,
+		// modify begin   - by sanguohot for fisco-bcos usage
+		blockLimit:   tx.data.BlockLimit,
+		// modify end   - by sanguohot for fisco-bcos usage
 		gasPrice:   new(big.Int).Set(tx.data.Price),
 		to:         tx.data.Recipient,
 		amount:     tx.data.Amount,
@@ -401,29 +407,37 @@ type Message struct {
 	nonce      uint64
 	amount     *big.Int
 	gasLimit   uint64
+	// modify begin   - by sanguohot for fisco-bcos usage
+	blockLimit uint64
+	// modify end   - by sanguohot for fisco-bcos usage
 	gasPrice   *big.Int
 	data       []byte
 	checkNonce bool
 }
-
-func NewMessage(from common.Address, to *common.Address, nonce uint64, amount *big.Int, gasLimit uint64, gasPrice *big.Int, data []byte, checkNonce bool) Message {
+// modify begin   - by sanguohot for fisco-bcos usage
+func NewMessage(from common.Address, to *common.Address, nonce uint64, amount *big.Int, gasLimit uint64, blockLimit uint64, gasPrice *big.Int, data []byte, checkNonce bool) Message {
 	return Message{
 		from:       from,
 		to:         to,
 		nonce:      nonce,
 		amount:     amount,
 		gasLimit:   gasLimit,
+		blockLimit: blockLimit,
 		gasPrice:   gasPrice,
 		data:       data,
 		checkNonce: checkNonce,
 	}
 }
+// modify end   - by sanguohot for fisco-bcos usage
 
 func (m Message) From() common.Address { return m.from }
 func (m Message) To() *common.Address  { return m.to }
 func (m Message) GasPrice() *big.Int   { return m.gasPrice }
 func (m Message) Value() *big.Int      { return m.amount }
 func (m Message) Gas() uint64          { return m.gasLimit }
+// modify begin   - by sanguohot for fisco-bcos usage
+func (m Message) BlockLimit() uint64          { return m.blockLimit }
+// modify end   - by sanguohot for fisco-bcos usage
 func (m Message) Nonce() uint64        { return m.nonce }
 func (m Message) Data() []byte         { return m.data }
 func (m Message) CheckNonce() bool     { return m.checkNonce }

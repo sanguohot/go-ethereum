@@ -223,6 +223,12 @@ func (fs FrontierSigner) Sender(tx *Transaction) (common.Address, error) {
 }
 
 func recoverPlain(sighash common.Hash, R, S, Vb *big.Int, homestead bool) (common.Address, error) {
+	// modify begin   - by sanguohot for fisco-bcos usage
+	// the fisco-bcos does not return tx signature, so recover address as 0x0
+	if Vb == nil {
+		return common.HexToAddress("0x0"), nil
+	}
+	// modify end   - by sanguohot for fisco-bcos usage
 	if Vb.BitLen() > 8 {
 		return common.Address{}, ErrInvalidSig
 	}
