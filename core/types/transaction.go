@@ -60,9 +60,7 @@ type txdata struct {
 	S *big.Int `json:"s"`
 
 	// This is only used when marshaling to JSON.
-	// modify begin - by sanguohot for fisco-bcos usage
-	//Hash *common.Hash `json:"hash" rlp:"-"`
-	// modify end   - by sanguohot for fisco-bcos usage
+	Hash *common.Hash `json:"hash" rlp:"-"`
 }
 
 type txdataMarshaling struct {
@@ -188,6 +186,7 @@ func (tx *Transaction) Data() []byte       { return common.CopyBytes(tx.data.Pay
 func (tx *Transaction) Gas() uint64        { return tx.data.GasLimit }
 // modify begin - by sanguohot for fisco-bcos usage
 func (tx *Transaction) BlockLimit() uint64        { return tx.data.BlockLimit }
+func (tx *Transaction) FiscoHash() *common.Hash        { return tx.data.Hash }
 // modify end   - by sanguohot for fisco-bcos usage
 func (tx *Transaction) GasPrice() *big.Int { return new(big.Int).Set(tx.data.Price) }
 func (tx *Transaction) Value() *big.Int    { return new(big.Int).Set(tx.data.Amount) }
