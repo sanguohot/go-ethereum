@@ -26,6 +26,7 @@ func (t txdata) MarshalJSON() ([]byte, error) {
 		V            *hexutil.Big    `json:"v"`
 		R            *hexutil.Big    `json:"r"`
 		S            *hexutil.Big    `json:"s"`
+		Hash         *common.Hash    `json:"hash" rlp:"-"`
 	}
 	var enc txdata
 	enc.AccountNonce = hexutil.Uint64(t.AccountNonce)
@@ -38,6 +39,7 @@ func (t txdata) MarshalJSON() ([]byte, error) {
 	enc.V = (*hexutil.Big)(t.V)
 	enc.R = (*hexutil.Big)(t.R)
 	enc.S = (*hexutil.Big)(t.S)
+	enc.Hash = t.Hash
 	return json.Marshal(&enc)
 }
 
@@ -54,6 +56,7 @@ func (t *txdata) UnmarshalJSON(input []byte) error {
 		V            *hexutil.Big    `json:"v"`
 		R            *hexutil.Big    `json:"r"`
 		S            *hexutil.Big    `json:"s"`
+		Hash         *common.Hash    `json:"hash" rlp:"-"`
 	}
 	var dec txdata
 	if err := json.Unmarshal(input, &dec); err != nil {
@@ -93,6 +96,9 @@ func (t *txdata) UnmarshalJSON(input []byte) error {
 	}
 	if dec.S != nil {
 		t.S = (*big.Int)(dec.S)
+	}
+	if dec.Hash != nil {
+		t.Hash = dec.Hash
 	}
 	return nil
 }
