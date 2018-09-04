@@ -95,7 +95,6 @@ type headerMarshaling struct {
 	Number     *hexutil.Big
 	// modify start   - by sanguohot for fisco-bcos usage
 	GenIndex   *hexutil.Big
-	NodeList   [][]hexutil.Bytes
 	// modify end   - by sanguohot for fisco-bcos usage
 	GasLimit   hexutil.Uint64
 	GasUsed    hexutil.Uint64
