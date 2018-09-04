@@ -82,7 +82,8 @@ type Header struct {
 	Time        *big.Int       `json:"timestamp"        gencodec:"required"`
 	Extra       []byte         `json:"extraData"        gencodec:"required"`
 	// modify start   - by sanguohot for fisco-bcos usage
-	GenIndex    *big.Int       `json:"genIndex"`
+	GenIndex    *big.Int       `json:"genIndex"         gencodec:"required"`
+	NodeList    [][]byte       `json:"nodeList"         gencodec:"required"`
 	// modify end   - by sanguohot for fisco-bcos usage
 	MixDigest   common.Hash    `json:"mixHash"`
 	Nonce       BlockNonce     `json:"nonce"`
@@ -93,7 +94,8 @@ type headerMarshaling struct {
 	Difficulty *hexutil.Big
 	Number     *hexutil.Big
 	// modify start   - by sanguohot for fisco-bcos usage
-	GenIndex     *hexutil.Big
+	GenIndex   *hexutil.Big
+	NodeList   [][]hexutil.Bytes
 	// modify end   - by sanguohot for fisco-bcos usage
 	GasLimit   hexutil.Uint64
 	GasUsed    hexutil.Uint64
@@ -122,8 +124,9 @@ func (h *Header) Hash() common.Hash {
 		h.Time,
 		h.Extra,
 		h.GenIndex,
-		// modify end   - by sanguohot for fisco-bcos usage
+		h.NodeList,
 	})
+	// modify end   - by sanguohot for fisco-bcos usage
 }
 
 // HashNoNonce returns the hash which is used as input for the proof-of-work search.
@@ -342,6 +345,10 @@ func (b *Block) TxHash() common.Hash      { return b.header.TxHash }
 func (b *Block) ReceiptHash() common.Hash { return b.header.ReceiptHash }
 func (b *Block) UncleHash() common.Hash   { return b.header.UncleHash }
 func (b *Block) Extra() []byte            { return common.CopyBytes(b.header.Extra) }
+// modify start   - by sanguohot for fisco-bcos usage
+func (b *Block) GenIndex() *big.Int            { return new(big.Int).Set(b.header.GenIndex) }
+func (b *Block) NodeList() [][]byte            { return b.header.NodeList }
+// modify end   - by sanguohot for fisco-bcos usage
 
 func (b *Block) Header() *Header { return CopyHeader(b.header) }
 
