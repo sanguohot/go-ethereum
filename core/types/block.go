@@ -81,6 +81,9 @@ type Header struct {
 	GasUsed     uint64         `json:"gasUsed"          gencodec:"required"`
 	Time        *big.Int       `json:"timestamp"        gencodec:"required"`
 	Extra       []byte         `json:"extraData"        gencodec:"required"`
+	// modify start   - by sanguohot for fisco-bcos usage
+	GenIndex    *big.Int       `json:"genIndex"`
+	// modify end   - by sanguohot for fisco-bcos usage
 	MixDigest   common.Hash    `json:"mixHash"`
 	Nonce       BlockNonce     `json:"nonce"`
 }
@@ -89,6 +92,9 @@ type Header struct {
 type headerMarshaling struct {
 	Difficulty *hexutil.Big
 	Number     *hexutil.Big
+	// modify start   - by sanguohot for fisco-bcos usage
+	GenIndex     *hexutil.Big
+	// modify end   - by sanguohot for fisco-bcos usage
 	GasLimit   hexutil.Uint64
 	GasUsed    hexutil.Uint64
 	Time       *hexutil.Big
@@ -99,7 +105,25 @@ type headerMarshaling struct {
 // Hash returns the block hash of the header, which is simply the keccak256 hash of its
 // RLP encoding.
 func (h *Header) Hash() common.Hash {
-	return rlpHash(h)
+	// modify start   - by sanguohot for fisco-bcos usage
+	//return rlpHash(h)
+	return rlpHash([]interface{}{
+		h.ParentHash,
+		h.UncleHash,
+		h.Coinbase,
+		h.Root,
+		h.TxHash,
+		h.ReceiptHash,
+		h.Bloom,
+		h.Difficulty,
+		h.Number,
+		h.GasLimit,
+		h.GasUsed,
+		h.Time,
+		h.Extra,
+		h.GenIndex,
+		// modify end   - by sanguohot for fisco-bcos usage
+	})
 }
 
 // HashNoNonce returns the hash which is used as input for the proof-of-work search.
